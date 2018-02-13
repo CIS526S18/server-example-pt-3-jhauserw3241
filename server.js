@@ -52,6 +52,10 @@ function studentForm() {
   form +=    "   <label for='description'>Description</label>";
   form +=    "   <textarea name='description'></textarea>";
   form +=    "  </fieldset>";
+  form +=    "  <fieldset>";
+  form +=    "   <label for='photo'>Photo</label>";
+  form +=    "   <input type='file' name='photo' />";
+  form +=    "  </fieldset>";
   form +=    "  <input type='submit' value='add student'/>";
   form +=    "</form>"
   return form;
@@ -85,9 +89,9 @@ function handleRequest(req, res) {
 
       // Save *sanitized* student object to cache
       students.push({
-        name: escapeHTML(params.name),
-        eid: escapeHTML(params.eid),
-        description: escapeHTML(params.description)
+        name: escapeHTML(student.name),
+        eid: escapeHTML(student.eid),
+        description: escapeHTML(student.description)
       });
       
       // Save cache to hard drive
