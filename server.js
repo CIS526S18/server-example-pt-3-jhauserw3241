@@ -1,13 +1,9 @@
 const http = require('http');
 const fs = require('fs');
 const qs = require('querystring');
+const students = require('./model/students');
 
 const PORT = 3000;
-
-/* Load sync files into a global variable
- * This serves as an in-memory cache for speedy access.
- */
-var students = JSON.parse(fs.readFileSync("students.json", {encoding: 'utf-8'}));
 
 /** @function escapeHTML
   * A helper function for sanitizing user input by
@@ -29,7 +25,7 @@ function escapeHTML(html) {
   * @return {String} an html fragment of the student's names
   */
 function studentList() {
-  return students.map(function(item) {
+  return students.getStudents().map(function(item) {
     return item.name;
   }).join(", ");
 }
@@ -85,17 +81,7 @@ function handleRequest(req, res) {
     req.on('end', function(){
       var student = qs.parse(body);
 
-      // TODO: Validate student object
-
-      // Save *sanitized* student object to cache
-      students.push({
-        name: escapeHTML(student.name),
-        eid: escapeHTML(student.eid),
-        description: escapeHTML(student.description)
-      });
-      
-      // Save cache to hard drive
-      fs.writeFile('students.json', JSON.stringify(students));
+      students.addStudent(student);
     });
   }
 
